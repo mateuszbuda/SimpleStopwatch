@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Stoper</string>
+    <string name="action_about">Informacje</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+    <string name="reset">Reset</string>
+    <string name="title_activity_about">Informacje</string>
+    <string name="about_site_header">Odwiedź naszą stronę</string>
+    <string name="about_site">www.narfsoftware.pl</string>
+    <string name="about_email_title">Kontakt</string>
+    <string name="about_email">info@narfsoftware.pl</string>
+    <string name="logo_description">NarfSoftware Logo</string>
+    <string name="action_about_title">Informacje</string>
+    <string name="about_header">Stoper</string>
+    <string name="about_subheader">wersja 1.1</string>
+    <string name="about_text">Oczekujemy na wiadomość od Was. Przesyłajcie inormacje o znalezionych błedach, sugestie usprawnień lub jeśli chcecie dodać tłumaczenie. Będziemy wdzięczni, jeśli zdecydujecie się ocenić nasze aplikacje i zostawić komentarz na Google Market.</string>
+
+</resources>
