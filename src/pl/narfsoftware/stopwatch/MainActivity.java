@@ -2,9 +2,12 @@ package pl.narfsoftware.stopwatch;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,20 +17,23 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 	static final String TAG = "MainActivity";
 
+	private static final String ROBOTO_FONT_PATH = "Roboto-Light.ttf";
+
+	static final String KEY_RUNNING = "running";
+	static final String KEY_ELAPSED_TIME = "elapsed_time";
+
 	final int MSG_START_TIMER = 0;
 	final int MSG_STOP_TIMER = 1;
 	final int MSG_UPDATE_TIMER = 2;
 	final int MSG_RESET_TIMER = 3;
 	final int MSG_RESET_AND_CONTINUE = 4;
 
-	TextView hours;
-	TextView minutes;
-	TextView seconds;
-	TextView miliseconds;
+	TextView textViewTimer;
 
-	boolean running = false;
 	Stopwatch timer = new Stopwatch();
-	final int REFRESH_RATE = 1;
+	long time = 0L;
+	boolean running = false;
+	final int REFRESH_RATE = 50;
 
 	Handler handler;
 
@@ -37,10 +43,13 @@ public class MainActivity extends Activity {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 
-		// hours = (TextView) findViewById(R.id.hours);
-		// minutes = (TextView) findViewById(R.id.minutes);
-		seconds = (TextView) findViewById(R.id.seconds);
-		miliseconds = (TextView) findViewById(R.id.miliseconds);
+		textViewTimer = (TextView) findViewById(R.id.timer);
+		textViewTimer.setTypeface(Typeface.createFromAsset(getAssets(),
+				ROBOTO_FONT_PATH));
+
+		time = PreferenceManager.getDefaultSharedPreferences(this).getLong(
+				KEY_ELAPSED_TIME, 0L);
+		updateTimer(time);
 
 		handler = new Handler() {
 			@Override
@@ -48,7 +57,7 @@ public class MainActivity extends Activity {
 				super.handleMessage(msg);
 				switch (msg.what) {
 				case MSG_START_TIMER:
-					timer.start();
+					timer.start(time);
 					handler.sendEmptyMessage(MSG_UPDATE_TIMER);
 					break;
 
@@ -70,7 +79,8 @@ public class MainActivity extends Activity {
 					break;
 
 				case MSG_RESET_AND_CONTINUE:
-					handler.sendEmptyMessage(MSG_START_TIMER);
+					timer.start();
+					handler.sendEmptyMessage(MSG_UPDATE_TIMER);
 					break;
 
 				default:
@@ -78,13 +88,43 @@ public class MainActivity extends Activity {
 				}
 			}
 		};
-
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
+		outState.putLong(KEY_ELAPSED_TIME, running ? timer.getElapsedTime()
+				: time);
+		outState.putBoolean(KEY_RUNNING, running);
 
 		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		time = savedInstanceState.getLong(KEY_ELAPSED_TIME);
+		running = savedInstanceState.getBoolean(KEY_RUNNING);
+		if (running)
+			handler.sendEmptyMessage(MSG_START_TIMER);
+		else
+			updateTimer(time);
+
+		super.onRestoreInstanceState(savedInstanceState);
+	}
+
+	@Override
+	protected void onDestroy() {
+		handler.removeMessages(MSG_UPDATE_TIMER);
+		super.onDestroy();
+	}
+
+	@Override
+	public void onBackPressed() {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		prefs.edit()
+				.putLong(KEY_ELAPSED_TIME,
+						running ? timer.getElapsedTime() : time).commit();
+		super.onBackPressed();
 	}
 
 	@Override
@@ -115,27 +155,27 @@ public class MainActivity extends Activity {
 
 	public void stopwatchStop(View view) {
 		if (running) {
+			time = timer.getElapsedTime();
 			running = false;
 			handler.sendEmptyMessage(MSG_STOP_TIMER);
 		}
 	}
 
 	public void stopwatchReset(View view) {
-		if (!running)
-			handler.sendEmptyMessage(MSG_RESET_TIMER);
-		else
-			handler.sendEmptyMessage(MSG_RESET_AND_CONTINUE);
+		time = 0L;
+		handler.sendEmptyMessage(running ? MSG_RESET_AND_CONTINUE
+				: MSG_RESET_TIMER);
 	}
 
 	private void updateTimer(long milis) {
-		miliseconds.setText(String.format("%1$03d", getMiliseconds(milis)));
-		seconds.setText(String.format("%1$02d", getSeconds(milis)));
-		// minutes.setText(String.format("%1$2d", getMinutes(milis)));
-		// hours.setText(String.format("%1$2d", getHours(milis)));
+		textViewTimer.setText(String.format("%1$02d:%2$02d.%3$02d",
+				getMinutes(milis), getSeconds(milis), getMiliseconds(milis)));
+		((AutoScaleTextView) textViewTimer).onTextChanged(
+				textViewTimer.getText(), 0, 0, 0);
 	}
 
 	private long getMiliseconds(long milis) {
-		return milis % 1000;
+		return (milis % 1000) / 10;
 	}
 
 	private long getSeconds(long milis) {
@@ -143,10 +183,6 @@ public class MainActivity extends Activity {
 	}
 
 	private long getMinutes(long milis) {
-		return (milis / 60000) % 60;
-	}
-
-	private long getHours(long milis) {
-		return (milis / 3600000);
+		return (milis / 60000);
 	}
 }

@@ -11,8 +11,8 @@ public class Stopwatch {
 		this.running = true;
 	}
 
-	public void start(long startTime) {
-		this.startTime = startTime;
+	public void start(long elapsedTime) {
+		this.startTime = System.currentTimeMillis() - elapsedTime;
 		this.running = true;
 	}
 
