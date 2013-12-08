@@ -17,7 +17,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 	static final String TAG = "MainActivity";
 
-	private static final String ROBOTO_FONT_PATH = "Roboto-Light.ttf";
+	private static final String FONT_PATH = "Harting_plain.ttf";
 
 	static final String KEY_RUNNING = "running";
 	static final String KEY_ELAPSED_TIME = "elapsed_time";
@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
 	Stopwatch timer = new Stopwatch();
 	long time = 0L;
 	boolean running = false;
-	final int REFRESH_RATE = 50;
+	final int REFRESH_RATE = 10;
 
 	Handler handler;
 
@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 
 		textViewTimer = (TextView) findViewById(R.id.timer);
 		textViewTimer.setTypeface(Typeface.createFromAsset(getAssets(),
-				ROBOTO_FONT_PATH));
+				FONT_PATH));
 
 		time = PreferenceManager.getDefaultSharedPreferences(this).getLong(
 				KEY_ELAPSED_TIME, 0L);

@@ -74,9 +74,9 @@ public class AutoScaleTextView extends TextView implements TextWatcher {
 
 		// the width
 		int targetWidth = textWidth - this.getPaddingLeft()
-				- this.getPaddingRight();
+				- this.getPaddingRight() - (int) (textWidth * 0.036);
 
-		final float threshold = 0.5f; // How close we have to be
+		final float threshold = 0.05f; // How close we have to be
 
 		this.textPaint.set(this.getPaint());
 
