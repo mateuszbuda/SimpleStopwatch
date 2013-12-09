@@ -17,7 +17,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 	static final String TAG = "MainActivity";
 
-	private static final String FONT_PATH = "Harting_plain.ttf";
+	private static final String FONT_PATH = "unispace.ttf";
 
 	static final String KEY_RUNNING = "running";
 	static final String KEY_ELAPSED_TIME = "elapsed_time";
