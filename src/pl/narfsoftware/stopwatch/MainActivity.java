@@ -1,5 +1,7 @@
 package pl.narfsoftware.stopwatch;
 
+import java.lang.ref.WeakReference;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,11 +30,11 @@ public class MainActivity extends Activity {
 	static final int MINUTE = 60 * SECOND;
 	static final int HOUR = 60 * MINUTE;
 
-	final int MSG_START_TIMER = 0;
-	final int MSG_STOP_TIMER = 1;
-	final int MSG_UPDATE_TIMER = 2;
-	final int MSG_RESET_TIMER = 3;
-	final int MSG_RESET_AND_CONTINUE = 4;
+	static final int MSG_START_TIMER = 0;
+	static final int MSG_STOP_TIMER = 1;
+	static final int MSG_UPDATE_TIMER = 2;
+	static final int MSG_RESET_TIMER = 3;
+	static final int MSG_RESET_AND_CONTINUE = 4;
 
 	TextView textViewTimer;
 
@@ -41,7 +43,56 @@ public class MainActivity extends Activity {
 	boolean running = false;
 	int refreshRate = 2 * MILISECOND;
 
-	static Handler handler;
+	private static class StopwatchHandler extends Handler {
+		private final WeakReference<MainActivity> activity;
+
+		public StopwatchHandler(MainActivity activity) {
+			this.activity = new WeakReference<MainActivity>(activity);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			MainActivity activity = this.activity.get();
+			switch (msg.what) {
+			case MSG_START_TIMER:
+				activity.timer.start(activity.time);
+				Log.d(TAG, "timer.start(" + activity.time + ")");
+				activity.running = true;
+				Log.d(TAG, "running = true");
+				this.sendEmptyMessage(MSG_UPDATE_TIMER);
+				break;
+
+			case MSG_UPDATE_TIMER:
+				activity.updateTimer(activity.timer.getElapsedTime());
+				this.sendEmptyMessageDelayed(MSG_UPDATE_TIMER,
+						activity.refreshRate);
+				break;
+
+			case MSG_STOP_TIMER:
+				activity.timer.stop();
+				Log.d(TAG, "timer.stop()");
+				this.removeMessages(MSG_UPDATE_TIMER);
+				break;
+
+			case MSG_RESET_TIMER:
+				activity.updateTimer(0);
+				this.removeMessages(MSG_UPDATE_TIMER);
+				activity.timer.stop();
+				break;
+
+			case MSG_RESET_AND_CONTINUE:
+				activity.timer.start();
+				this.sendEmptyMessage(MSG_UPDATE_TIMER);
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+
+	private final StopwatchHandler handler = new StopwatchHandler(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,48 +108,6 @@ public class MainActivity extends Activity {
 		time = PreferenceManager.getDefaultSharedPreferences(this).getLong(
 				KEY_ELAPSED_TIME, 0L);
 		updateTimer(time);
-
-		handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				switch (msg.what) {
-				case MSG_START_TIMER:
-					timer.start(time);
-					Log.d(TAG, "timer.start(" + time + ")");
-					running = true;
-					Log.d(TAG, "running = true");
-					handler.sendEmptyMessage(MSG_UPDATE_TIMER);
-					break;
-
-				case MSG_UPDATE_TIMER:
-					updateTimer(timer.getElapsedTime());
-					handler.sendEmptyMessageDelayed(MSG_UPDATE_TIMER,
-							refreshRate);
-					break;
-
-				case MSG_STOP_TIMER:
-					timer.stop();
-					Log.d(TAG, "timer.stop()");
-					handler.removeMessages(MSG_UPDATE_TIMER);
-					break;
-
-				case MSG_RESET_TIMER:
-					updateTimer(0);
-					handler.removeMessages(MSG_UPDATE_TIMER);
-					timer.stop();
-					break;
-
-				case MSG_RESET_AND_CONTINUE:
-					timer.start();
-					handler.sendEmptyMessage(MSG_UPDATE_TIMER);
-					break;
-
-				default:
-					break;
-				}
-			}
-		};
 	}
 
 	@Override
