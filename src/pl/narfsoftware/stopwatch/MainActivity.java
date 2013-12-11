@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,11 @@ public class MainActivity extends Activity {
 	static final String KEY_RUNNING = "running";
 	static final String KEY_ELAPSED_TIME = "elapsed_time";
 
+	static final int MILISECOND = 1;
+	static final int SECOND = 1000 * MILISECOND;
+	static final int MINUTE = 60 * SECOND;
+	static final int HOUR = 60 * MINUTE;
+
 	final int MSG_START_TIMER = 0;
 	final int MSG_STOP_TIMER = 1;
 	final int MSG_UPDATE_TIMER = 2;
@@ -33,13 +39,14 @@ public class MainActivity extends Activity {
 	Stopwatch timer = new Stopwatch();
 	long time = 0L;
 	boolean running = false;
-	final int REFRESH_RATE = 10;
+	int refreshRate = 2 * MILISECOND;
 
-	Handler handler;
+	static Handler handler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 
@@ -58,18 +65,22 @@ public class MainActivity extends Activity {
 				switch (msg.what) {
 				case MSG_START_TIMER:
 					timer.start(time);
+					Log.d(TAG, "timer.start(" + time + ")");
+					running = true;
+					Log.d(TAG, "running = true");
 					handler.sendEmptyMessage(MSG_UPDATE_TIMER);
 					break;
 
 				case MSG_UPDATE_TIMER:
 					updateTimer(timer.getElapsedTime());
 					handler.sendEmptyMessageDelayed(MSG_UPDATE_TIMER,
-							REFRESH_RATE);
+							refreshRate);
 					break;
 
 				case MSG_STOP_TIMER:
-					handler.removeMessages(MSG_UPDATE_TIMER);
 					timer.stop();
+					Log.d(TAG, "timer.stop()");
+					handler.removeMessages(MSG_UPDATE_TIMER);
 					break;
 
 				case MSG_RESET_TIMER:
@@ -103,6 +114,7 @@ public class MainActivity extends Activity {
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		time = savedInstanceState.getLong(KEY_ELAPSED_TIME);
 		running = savedInstanceState.getBoolean(KEY_RUNNING);
+
 		if (running)
 			handler.sendEmptyMessage(MSG_START_TIMER);
 		else
@@ -148,15 +160,16 @@ public class MainActivity extends Activity {
 
 	public void stopwatchStart(View view) {
 		if (!running) {
-			running = true;
 			handler.sendEmptyMessage(MSG_START_TIMER);
 		}
 	}
 
 	public void stopwatchStop(View view) {
 		if (running) {
-			time = timer.getElapsedTime();
 			running = false;
+			Log.d(TAG, "running = false");
+			time = timer.getElapsedTime();
+			Log.d(TAG, "time = " + time);
 			handler.sendEmptyMessage(MSG_STOP_TIMER);
 		}
 	}
@@ -168,21 +181,36 @@ public class MainActivity extends Activity {
 	}
 
 	private void updateTimer(long milis) {
-		textViewTimer.setText(String.format("%1$02d:%2$02d.%3$02d",
-				getMinutes(milis), getSeconds(milis), getMiliseconds(milis)));
-		((AutoScaleTextView) textViewTimer).onTextChanged(
-				textViewTimer.getText(), 0, 0, 0);
+		long minutes = getMinutes(milis);
+		if (minutes < 10)
+			textViewTimer.setText(String.format("%1$01d:%2$02d.%3$03d",
+					minutes, getSeconds(milis), getMiliseconds(milis)));
+		else if (minutes < 100) {
+			textViewTimer.setText(String.format("%1$02d:%2$02d.%3$02d",
+					minutes, getSeconds(milis), getMiliseconds(milis)
+							/ (10 * MILISECOND)));
+			refreshRate = 10 * MILISECOND;
+		} else if (minutes < 1000) {
+			textViewTimer.setText(String.format("%1$03d:%2$02d.%3$01d",
+					minutes, getSeconds(milis), getMiliseconds(milis)
+							/ (100 * MILISECOND)));
+			refreshRate = 50 * MILISECOND;
+		} else {
+			textViewTimer.setText(String.format("%1$04d:%2$02d", minutes,
+					getSeconds(milis)));
+			refreshRate = 200 * MILISECOND;
+		}
 	}
 
 	private long getMiliseconds(long milis) {
-		return (milis % 1000) / 10;
+		return (milis % SECOND);
 	}
 
 	private long getSeconds(long milis) {
-		return (milis / 1000) % 60;
+		return (milis / SECOND) % (MINUTE / SECOND);
 	}
 
 	private long getMinutes(long milis) {
-		return (milis / 60000);
+		return (milis / MINUTE);
 	}
 }

@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.TextView;
@@ -19,7 +16,7 @@ import android.widget.TextView;
  * @version 1.0
  * 
  */
-public class AutoScaleTextView extends TextView implements TextWatcher {
+public class AutoScaleTextView extends TextView {
 	private Paint textPaint;
 
 	private float preferredTextSize;
@@ -74,7 +71,7 @@ public class AutoScaleTextView extends TextView implements TextWatcher {
 
 		// the width
 		int targetWidth = textWidth - this.getPaddingLeft()
-				- this.getPaddingRight() - (int) (textWidth * 0.05);
+				- this.getPaddingRight() - (int) (textWidth * 0.036);
 
 		final float threshold = 0.05f; // How close we have to be
 
@@ -110,31 +107,4 @@ public class AutoScaleTextView extends TextView implements TextWatcher {
 		this.refitText(this.getText().toString(), this.getWidth());
 		super.onDraw(canvas);
 	}
-
-	@Override
-	protected void onFocusChanged(boolean focused, int direction,
-			Rect previouslyFocusedRect) {
-		this.refitText(this.getText().toString(), this.getWidth());
-		super.onFocusChanged(focused, direction, previouslyFocusedRect);
-	}
-
-	@Override
-	public void onWindowFocusChanged(boolean hasWindowFocus) {
-		this.refitText(this.getText().toString(), this.getWidth());
-		super.onWindowFocusChanged(hasWindowFocus);
-	}
-
-	@Override
-	public void afterTextChanged(Editable s) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
