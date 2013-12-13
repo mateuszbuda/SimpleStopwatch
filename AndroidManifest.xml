@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pl.narfsoftware.stopwatch"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.1" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="5"
         android:targetSdkVersion="17" />
 
     <application
@@ -25,6 +25,10 @@
         <activity
             android:name="pl.narfsoftware.stopwatch.AboutActivity"
             android:label="@string/title_activity_about" >
+        </activity>
+        <activity
+            android:name="pl.narfsoftware.stopwatch.HelpActivity"
+            android:label="@string/title_activity_help" >
         </activity>
     </application>
 

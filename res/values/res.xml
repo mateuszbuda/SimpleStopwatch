@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <drawable name="pressed_bkg">#3333CC</drawable>
+    <drawable name="pressed_bkg">#AA0066FF</drawable>
     <drawable name="normal_bkg">#0099CC</drawable>
 
 </resources>

@@ -15,6 +15,30 @@
     <string name="action_about_title">Informacje</string>
     <string name="about_header">Stoper</string>
     <string name="about_subheader">wersja 1.1</string>
-    <string name="about_text">Oczekujemy na wiadomość od Was. Przesyłajcie inormacje o znalezionych błedach, sugestie usprawnień lub jeśli chcecie dodać tłumaczenie. Będziemy wdzięczni, jeśli zdecydujecie się ocenić nasze aplikacje i zostawić komentarz na Google Market.</string>
+    <string name="about_text">Oczekujemy na wiadomość od Was. 
+        \nPrzesyłajcie informacje o znalezionych błedach, sugestie usprawnień lub jeśli chcecie dodać tłumaczenie. 
+        \nBędziemy wdzięczni, jeśli zdecydujecie się ocenić nasze aplikacje i zostawić komentarz na Google Market.</string>
+    <string name="title_activity_help">Pomoc</string>
+    <string name="help_start_header">Przycisk Start:</string>
+    <string name="help_start_text">Naciśnij aby rozpocząć lub kontynuować odliczanie czasu.
+        \nJeśli naciśniesz go kolejny raz, kiedy stoper już odlicza czas, nie będzie to miało żadnego efektu.</string>
+    <string name="help_stop_header">Przycisk Stop:</string>
+    <string name="help_stop_text">Naciśnij go aby zatrzymać odliczanie czasu.
+        \nJesli naciśniesz go kolejny raz, kiedy stoper będzie już zatrzymany, nie będzie to miało żadnego efektu.</string>
+    <string name="help_reset_header">Przycisk Reset:</string>
+    <string name="help_reset_text">Naciśnij go aby wyzerować stoper.
+        \nJeśli stoper odliczał czas przed wyzerowaniem, będzie go naliczał dalej po.</string>
+    <string name="help_working_in_backgroud_header">Działanie w tle:</string>
+    <string name="help_working_in_backgroud_text">Stoper będzie działał w tle jeśli wyłączysz ekran lub jeśli naciśniesz przycisk Home.
+        \nJednak po naciśnięcu przycisku powrotu, stoper zatrzymuje się i przed opuszczeniem ekranu zapisuje czas.</string>
+    <string name="help_saving_state_header">Zapis odliczonego czasu:</string>
+    <string name="help_saving_state_text">Za każdym razem kiedy opuszczasz aplikację, odliczony dotychczas czas zostaje zapisany i jest przywracany podczas następnego uruchomienia.</string>
+    <string name="help_accuracy_header">Dokładność:</string>
+    <string name="help_accuracy_text">Dokładność odliczanego czasu zależy od tego, ile go dotychczas upłynęło.
+        \nNa początku stoper wyświetla czas z dokładnością do jednej milisekundy.
+        \nPo upłynięciu 10 minut dokładność maleje do 0.01 sekundy.
+        \nDalej po upłynięciu 100 minut dokładność wynosi już 0.1 sekundy.
+        \nOstatecznie po upłynięcu 1000 minut, czas liczony jest z dokładnością do jedej sekundy.\n</string>
+    <string name="action_help">Pomoc</string>
 
 </resources>

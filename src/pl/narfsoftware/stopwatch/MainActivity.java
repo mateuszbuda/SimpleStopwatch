@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,9 +56,7 @@ public class MainActivity extends Activity {
 			switch (msg.what) {
 			case MSG_START_TIMER:
 				activity.timer.start(activity.time);
-				Log.d(TAG, "timer.start(" + activity.time + ")");
 				activity.running = true;
-				Log.d(TAG, "running = true");
 				this.sendEmptyMessage(MSG_UPDATE_TIMER);
 				break;
 
@@ -71,7 +68,6 @@ public class MainActivity extends Activity {
 
 			case MSG_STOP_TIMER:
 				activity.timer.stop();
-				Log.d(TAG, "timer.stop()");
 				this.removeMessages(MSG_UPDATE_TIMER);
 				break;
 
@@ -162,6 +158,10 @@ public class MainActivity extends Activity {
 			startActivity(new Intent(this, AboutActivity.class));
 			return true;
 
+		case R.id.action_help:
+			startActivity(new Intent(this, HelpActivity.class));
+			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -176,9 +176,7 @@ public class MainActivity extends Activity {
 	public void stopwatchStop(View view) {
 		if (running) {
 			running = false;
-			Log.d(TAG, "running = false");
 			time = timer.getElapsedTime();
-			Log.d(TAG, "time = " + time);
 			handler.sendEmptyMessage(MSG_STOP_TIMER);
 		}
 	}

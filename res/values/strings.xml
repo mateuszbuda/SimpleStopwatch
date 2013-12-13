@@ -14,7 +14,31 @@
     <string name="logo_description">NarfSoftware Logo</string>
     <string name="action_about_title">About</string>
     <string name="about_header">Simple Stopwatch</string>
-    <string name="about_subheader">version 1.01</string>
-    <string name="about_text">We\'re looking forward to hearing from you. Email us to report bugs, suggest an improvement or if you want to add a translation. We will be glad if you decide to rate and comment on our apps on Market.</string>
+    <string name="about_subheader">version 1.1</string>
+    <string name="about_text">We\'re looking forward to hearing from you. 
+        \nEmail us to report bugs, suggest an improvement or if you want to add a translation. 
+        \nWe will be glad if you decide to rate and comment on our apps on Market.</string>
+    <string name="title_activity_help">Help</string>
+    <string name="help_start_header">Start button:</string>
+    <string name="help_start_text">Press it to start or continue counting time.
+        \nIf you press it again when stopwatch is running it has no effect.</string>
+    <string name="help_stop_header">Stop button:</string>
+    <string name="help_stop_text">Press it to stop counting time.
+        \nIf you press it again when stopwatch is not running it has no effect.</string>
+    <string name="help_reset_header">Reset button:</string>
+    <string name="help_reset_text">Press it to reset stopwatch.
+        \nIf stopwatch was running before reset it continue to do so afterwards.</string>
+    <string name="help_working_in_backgroud_header">Working in backgroud:</string>
+    <string name="help_working_in_backgroud_text">Stopwatch is working in background if you lock the screen or if you press device home button.
+        \nHovewer, if you press back button stopwatch state is saved and it stopes running.</string>
+    <string name="help_saving_state_header">Saving stopwatch state:</string>
+    <string name="help_saving_state_text">Anytime you live application, stopwatch state is saved and then restored when you run application again.</string>
+    <string name="help_accuracy_header">Accuracy:</string>
+    <string name="help_accuracy_text">Accuracy of measured time depends on elapsed time.
+        \nConcretely, at first stopwatch measures time up to 1 milisecond. 
+        \nAfter 10 minutes elapses, accuracy changes to 1 centisecond. 
+        \nAfter 100 minutes elapses, accuracy changes to 1 decisecond 
+        \nand finally, after 1000 minutes elapses, stopwatch is measuring time only up to 1 second.\n</string>
+    <string name="action_help">Help</string>
 
 </resources>

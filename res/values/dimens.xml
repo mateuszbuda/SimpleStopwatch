@@ -5,8 +5,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="button_height">80dp</dimen>
     <dimen name="large_text">36sp</dimen>
-    <dimen name="timer_text_size">100sp</dimen>
-    <dimen name="timer_text_size_small">50sp</dimen>
+    <dimen name="timer_text_size">80sp</dimen>
     <dimen name="row_bottom_padding_small">6dp</dimen>
     <dimen name="rows_bottom_padding">12dp</dimen>
     <dimen name="margin">20dp</dimen>
